@@ -72,7 +72,7 @@ public class MainClass {
         
     }
     
-    public static int deleteRecordFromCustomers(int id, Database db){
+    public static int deleteRecordFromCustomersWithid(int id, Database db){
         int result = 0;
         String sql = String.format("DELETE FROM `customers` WHERE `id` = '%s'", id);
         db.setStatementNonStatic();
@@ -83,6 +83,22 @@ public class MainClass {
         }catch (SQLException ex) {
             Logger.getLogger(MainClass.class.getName()).log(Level.SEVERE, null, ex);
             return 0;
+        }
+    }
+    
+    public static int deleteRecordFromCustomersWithFirstName(Customer customer, Database db) {
+        int result = 0;       
+        String sql = "DELETE FROM `customers` WHERE `first_name` ="
+                + "'" + customer.getFirst_name() + "';";
+        db.setStatementNonStatic();
+        Statement st = db.getStatementNonStatic();
+        try {
+            result = st.executeUpdate(sql);
+            System.out.println(result  + " records deleted.");
+            return result;
+        } catch (SQLException ex) {
+            Logger.getLogger(MainClass.class.getName()).log(Level.SEVERE, null, ex);
+            return result;
         }
     }
     
