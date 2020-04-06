@@ -44,16 +44,30 @@ public class MainClass {
             
             // read one result with variable field
             rs2 = db.getOneResultByField("Sales", "products_id", "1");
-            printSalesResults(rs);
+//            printSalesResults(rs);
             
             // insert at customers
             // public static int insertRecordToCustomers(String first_name,String last_name, String email)
             // public static int insertRecordToCustomers(Customer customer)
             Customer customer = new Customer(0,"George", "Pasparakis", "paspa@hotmail.com");
-            System.out.println("Records inserted: " + insertRecordToCustomers(customer, db));
+            //System.out.println("Records inserted: " + insertRecordToCustomers(customer, db));
             rs = db.getResults("SELECT * FROM Customers");
-            printCustomerResults(rs);
+//            printCustomerResults(rs);
+            testdbMethods(db);
 
+    }
+    
+    public static void testdbMethods(Database db) {
+        try {
+            Statement st = db.getStatement();
+            ResultSet rs = st.executeQuery("SELECT * FROM Customers");
+            while(rs.next()) {
+                System.out.println(rs.getString(1));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(MainClass.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
     }
     
     public static int insertRecordToCustomers(Customer customer, Database db) {
