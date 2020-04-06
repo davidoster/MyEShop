@@ -56,12 +56,52 @@ public class Database {
             return null;
         }
     }
+    
+    public static ResultSet getOneResult(String tableName, int id) {
+        try {
+            setStatement();
+            String query = "SELECT * FROM `" + tableName + "` WHERE `id`=" + id;
+            ResultSet rs = statement.executeQuery(query);
+            return rs;
+        } catch (SQLException ex) {
+            Logger.getLogger(Database.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        }
+    }
+    
+    public static ResultSet getOneResultByField(String tableName, String fieldName, String fieldValue) {
+        // parameter table
+        // parameter fieldName
+        // parameter fieldValue
+        try {
+            setStatement();
+            String query = "SELECT * FROM `" + tableName + "` WHERE `" + fieldName + "`=" + fieldValue;
+            ResultSet rs = statement.executeQuery(query);
+            return rs;
+        } catch (SQLException ex) {
+            Logger.getLogger(Database.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        }
+        
+    }
 
     public static Statement getStatement() {
         return statement;
     }
+    
+    public Statement getStatementNonStatic() {
+        return statement;
+    }
 
     public static void setStatement() {
+        try {
+            statement = connection.createStatement();
+        } catch (SQLException ex) {
+            Logger.getLogger(Database.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public void setStatementNonStatic() {
         try {
             statement = connection.createStatement();
         } catch (SQLException ex) {
