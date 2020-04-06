@@ -30,25 +30,60 @@ public class MainClass {
     public static void main(String[] args) {
             Database db = new Database();
             
-            // customers
+            // read customers
             ResultSet rs = db.getResults("SELECT * FROM Customers");
-            printCustomerResults(rs); //<--- returns void
+//            printCustomerResults(rs); //<--- returns void
             
-            // products
+            // read products
             rs = db.getResults("SELECT * FROM Sales");
-            printSalesResults(rs); //<--- returns void
+//            printSalesResults(rs); //<--- returns void
            
+            // read one product
+            ResultSet rs2 = db.getOneResult("Customers", 2);
+//            printCustomerResults(rs2); //<--- returns void
             
+            // read one result with variable field
+            rs2 = db.getOneResultByField("Sales", "products_id", "1");
+            printSalesResults(rs);
+            
+            // insert at customers
+            // public static int insertRecordToCustomers(String first_name,String last_name, String email)
+            // public static int insertRecordToCustomers(Customer customer)
+            Customer customer = new Customer(0,"George", "Pasparakis", "paspa@hotmail.com");
+            System.out.println("Records inserted: " + insertRecordToCustomers(customer, db));
+            rs = db.getResults("SELECT * FROM Customers");
+            printCustomerResults(rs);
 
-//               Statement statement = null;
-//            ResultSet resultSet = null;
-//            
-//            Customer customer = new Customer();
-//            
-            
-//            System.out.println("Is connection valid? " + connection.isValid(5));
-//            statement = connection.createStatement();
-//            resultSet = statement.executeQuery("SELECT * FROM `customers`;");
+    }
+    
+    public static int insertRecordToCustomers(Customer customer, Database db) {
+        int result = 0;
+        String customer_data = "'"+ customer.getFirst_name() + "','" + customer.getLast_name() + "','" + customer.getEmail() + "'";
+        String sql = "INSERT INTO `Customers` (`first_name`,`last_name`,`email`) VALUES ("+  customer_data + ");";
+        db.setStatementNonStatic();
+        Statement st = db.getStatementNonStatic();
+        try {
+            result = st.executeUpdate(sql);
+            return result;
+        } catch (SQLException ex) {
+            Logger.getLogger(MainClass.class.getName()).log(Level.SEVERE, null, ex);
+            return result;
+        }
+        
+    }
+    
+    public static int deleteRecordFromCustomers(int id, Database db){
+        int result = 0;
+        String sql = String.format("DELETE FROM `customers` WHERE `id` = '%s'", id);
+        db.setStatementNonStatic();
+        Statement st = db.getStatementNonStatic();
+        try {
+            result = st.executeUpdate(sql);
+            return result;
+        }catch (SQLException ex) {
+            Logger.getLogger(MainClass.class.getName()).log(Level.SEVERE, null, ex);
+            return 0;
+        }
     }
     
     
@@ -71,13 +106,13 @@ public class MainClass {
     
     public static void printSalesResults(ResultSet rs) {
         try {
-            rs.last();
-            System.out.println("Rows : " + rs.getRow());
+//            rs.last();
+//            System.out.println("Rows : " + rs.getRow());
 //            rs.first();
             while(rs.next()) {
                 System.out.println(
                     "Sales's Id: "                  + rs.getString(1) +
-                    "Customer's Id: "               + rs.getString(2) +
+                    ", Customer's Id: "               + rs.getString(2) +
                     ", Product's Id: "              + rs.getString(3) +
                     ", Quantity: "                  + rs.getString(4) +
                     ", Unit Price: "                + rs.getString(5) +
