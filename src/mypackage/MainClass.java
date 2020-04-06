@@ -22,45 +22,91 @@ import java.util.logging.Logger;
  * @author George.Pasparakis
  */
 public class MainClass {
-    private static final String DB_URL = "localhost:3306";
-    private static final String FULL_DB_URL = "jdbc:mysql://" + DB_URL + "/eshop?zeroDateTimeBehavior=CONVERT_TO_NULL&useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC&allowPublicKeyRetrieval=true&useSSL=false";
-    private static final String DB_USER = "root";
-    private static final String DB_PASSWD = "Root1234!";
+    
 
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        try {
-            Connection connection = null;
-            Statement statement = null;
-            ResultSet resultSet = null;
+            Database db = new Database();
             
-            Customer customer = new Customer();
+            // customers
+            ResultSet rs = db.getResults("SELECT * FROM Customers");
+            printCustomerResults(rs); //<--- returns void
             
-            connection = DriverManager.getConnection(FULL_DB_URL, DB_USER, DB_PASSWD);
-            System.out.println("Is connection valid? " + connection.isValid(5));
-            statement = connection.createStatement();
-            resultSet = statement.executeQuery("SELECT * FROM customers;");
-            resultSet.last();
-            System.out.println("Rows : " + resultSet.getRow());
-            resultSet.first();
-            System.out.println("Customer's Id: " + resultSet.getString(1) + 
-                               ", First Name: "  + resultSet.getString(2) + 
-                               ", Last Name: "   + resultSet.getString(3) + 
-                               ", Email: "       + resultSet.getString(4));
+            // products
+            rs = db.getResults("SELECT * FROM Sales");
+            printSalesResults(rs); //<--- returns void
+           
             
+
+//               Statement statement = null;
+//            ResultSet resultSet = null;
+//            
+//            Customer customer = new Customer();
+//            
             
-            
-        } catch (SQLException ex) {
-            Logger.getLogger(MainClass.class.getName()).log(Level.SEVERE, null, ex);
-            System.out.println("No luck!");
-        }
-    
-    
+//            System.out.println("Is connection valid? " + connection.isValid(5));
+//            statement = connection.createStatement();
+//            resultSet = statement.executeQuery("SELECT * FROM `customers`;");
     }
     
     
+    public static void printCustomerResults(ResultSet rs) {
+        try {
+//            rs.last();
+//            System.out.println("Rows : " + rs.getRow());
+//            rs.first();
+            while(rs.next()) {
+                System.out.println(
+                    "Customer's Id: " + rs.getString(1) +
+                    ", First Name: "  + rs.getString(2) +
+                    ", Last Name: "   + rs.getString(3) +
+                    ", Email: "       + rs.getString(4));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(MainClass.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
     
+    public static void printSalesResults(ResultSet rs) {
+        try {
+            rs.last();
+            System.out.println("Rows : " + rs.getRow());
+//            rs.first();
+            while(rs.next()) {
+                System.out.println(
+                    "Sales's Id: "                  + rs.getString(1) +
+                    "Customer's Id: "               + rs.getString(2) +
+                    ", Product's Id: "              + rs.getString(3) +
+                    ", Quantity: "                  + rs.getString(4) +
+                    ", Unit Price: "                + rs.getString(5) +
+                    ", Purchase Date & Time: "      + rs.getString(6));
+            }
+        } catch (SQLException ex) {
+           Logger.getLogger(MainClass.class.getName()).log(Level.SEVERE, null, ex);
+        }
+           
+    }
     
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
