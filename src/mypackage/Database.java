@@ -7,6 +7,7 @@ package mypackage;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -24,6 +25,9 @@ public class Database {
     private static final String DB_PASSWD = "Root1234!";
     private static Connection connection = null;
     private static Statement statement = null;
+    private static PreparedStatement pst = null;
+
+    
     
     
     public Database() {
@@ -104,6 +108,18 @@ public class Database {
     public void setStatementNonStatic() {
         try {
             statement = connection.createStatement();
+        } catch (SQLException ex) {
+            Logger.getLogger(Database.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public static PreparedStatement getPreparedStatement() {
+        return pst;
+    }
+
+    public static void setPreparedStatement(String query) {
+        try {
+            pst = connection.prepareStatement(query);
         } catch (SQLException ex) {
             Logger.getLogger(Database.class.getName()).log(Level.SEVERE, null, ex);
         }
