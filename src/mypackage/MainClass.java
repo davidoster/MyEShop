@@ -6,13 +6,13 @@
 package mypackage;
 
 import models.Customer;
-import java.sql.DriverManager;
-import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import static mypackage.Database.getPreparedStatement;
 
 
 
@@ -54,7 +54,35 @@ public class MainClass {
             rs = db.getResults("SELECT * FROM Customers");
 //            printCustomerResults(rs);
             testdbMethods(db);
+            
+            // UPDATE `Customers` SET `email` = 'paspa2@hotmail.com' WHERE `email` = 'paspa@hotmail.com'
+            // UPDATE `Customers` SET `email` = ? WHERE `email` = ?
+            // public static int updateRecordFromCustomersWitheMail(String newEmail, String oldEmail, Database db)
 
+    }
+    
+    public static int updateRecordFromCustomersWitheMail(String query, String newEmail, String oldEmail, Database db) {
+        int result = 0;
+        try {
+            // Step 1 - via connection prepare the PreparedStatement (pst)
+            //String query = "UPDATE `Customers` SET `email` = ? WHERE `email` = ?";
+            db.setPreparedStatement(query); // <--- PreparedStatement pst = connection.prepareStatement(query)
+            
+            // Step 2 - get the pst vid Database db
+            PreparedStatement pst;
+            pst = db.getPreparedStatement();
+            
+            // Step 3 - set the parameters
+            pst.setString(1, oldEmail);
+            pst.setString(2, newEmail);
+            
+            // Step 4 - execute(update) query
+            result = pst.executeUpdate();
+            return result;
+        } catch (SQLException ex) {
+            Logger.getLogger(MainClass.class.getName()).log(Level.SEVERE, null, ex);
+            return result;
+        }
     }
     
     public static void testdbMethods(Database db) {
