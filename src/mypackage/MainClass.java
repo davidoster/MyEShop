@@ -53,11 +53,18 @@ public class MainClass {
             //System.out.println("Records inserted: " + insertRecordToCustomers(customer, db));
             rs = db.getResults("SELECT * FROM Customers");
 //            printCustomerResults(rs);
-            testdbMethods(db);
+//            testdbMethods(db);
             
             // UPDATE `Customers` SET `email` = 'paspa2@hotmail.com' WHERE `email` = 'paspa@hotmail.com'
             // UPDATE `Customers` SET `email` = ? WHERE `email` = ?
             // public static int updateRecordFromCustomersWitheMail(String newEmail, String oldEmail, Database db)
+            
+            String query = "UPDATE `Customers` SET `email` = ? WHERE `email` = ?";
+            String newEmail = "paspa2@hotmail.com";
+            String oldEmail ="paspa@hotmail.com";
+            
+            int result = updateRecordFromCustomersWitheMail(query, newEmail, oldEmail, db);
+            System.out.println("Records Updated : " + result);
 
     }
     
@@ -73,8 +80,8 @@ public class MainClass {
             pst = db.getPreparedStatement();
             
             // Step 3 - set the parameters
-            pst.setString(1, oldEmail);
-            pst.setString(2, newEmail);
+            pst.setString(1, newEmail);
+            pst.setString(2, oldEmail);
             
             // Step 4 - execute(update) query
             result = pst.executeUpdate();
